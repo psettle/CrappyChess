@@ -90,21 +90,6 @@ protected:
 		The objects the system is currently handling
 	*/
 	std::vector<GlObject*> objectsM;
-
-	/*
-		The Frame Buffer ID openGL allocates for the shadow mapping
-	*/
-	GLuint shadowDepthMapFBO;
-
-	/*
-		The texture ID openGL allocates for the depth map
-	*/
-	GLuint shadowDepthMap;
-
-	/*
-		Indicates if the object casts shadows
-	*/
-	GLboolean shadowEnabled;
 };
 
 #endif

@@ -135,6 +135,12 @@ void ChessPiece::restore() {
 	this->virtualDeleted = GL_FALSE;
 }
 
+void cachePositionAndSet(const Move& move, GLboolean deleted) {
+	this->virtualCache = this->chessPosition;
+	this->chessPosition = move;
+	this->virtualDeleted = deleted;
+}
+
 void ChessPiece::setChessPosition(const Move& move) {
 	//the space between each row on the chess board
 	GLfloat gridSpacing = this->boardWidth / 8;

@@ -146,11 +146,18 @@ public:
 	*/
 	void restore();
 
-	void cachePositionAndSet(const Move& move, GLboolean deleted) {
-		this->virtualCache = this->chessPosition;
-		this->chessPosition = move;
-		this->virtualDeleted = deleted;
-	}
+	/*
+		Saves this pieces old position and internal moves it to the new position,
+		marks it as virtually deleted if deleted == GL_TRUE
+		this is used to virtually move pieces around the board when testing
+		for check
+		@param move
+			The new virtual position for the move
+		@param deleted
+			Indicates if the piece should be marked as virtually deleted
+		
+	*/
+	void cachePositionAndSet(const Move& move, GLboolean deleted);
 
 	/*
 		Gets the squares on the board that this piece threatens
@@ -253,14 +260,16 @@ protected:
 	virtual ChessBoard getBoardState(const std::vector<ChessPiece*>& otherPieces) const;
 
 	/*
-		Returns a list of of integers, where every pair represents the grid coordinates of a valid moves
-		that a piece can make
-		@param board
-			The result of Board->toArray(), this is done to prevent circular dependencies
+		Gets the moves a piece is allowed to make
+		
+		@param otherPieces
+			 A vector of all the pieces on the board
 		@param canEnterCheck
 			Indicates if the current user is allowed to make a move that would put them in check
 			This occurs when considering 2nd order check, i.e. When making a move that would put you in check,
 			you still can't make it if the only way the opponent can capture your king puts them in check
+		@return
+			A vector of all the valid moves this piece can make based on the currect board state
 	*/
 	virtual std::vector<Move> getValidMoves(const std::vector<ChessPiece*>& otherPieces, const GLboolean canEnterCheck) = 0;
 
@@ -278,6 +287,11 @@ protected:
 		This is a pretty common requirement for chess pieces, rooks, bishops and queens all need to perform this calculation
 		@param board
 			The build board object to check move validity on
+		@param dMove
+			The 'Move differential' i.e. how squares to move in each step along the path, usually something like Move(1, 0), or Move(1,-1)
+			don't pass Move(0,0) or the path will never end
+		@return
+			All the moves along the path that are valid
 	*/
 	std::vector<Move> checkPath(const ChessBoard& board, const Move& dMove) const;
 
